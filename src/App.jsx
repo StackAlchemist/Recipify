@@ -10,6 +10,7 @@ import Login from './pages/Login'
 import UploadPG from './pages/Upload'
 import { ToastContainer } from 'react-toastify'
 import RecipeView from './pages/RecipeView'
+import EditingView from './pages/EditingView'
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/upload' element={<UploadPG/>}/>
         <Route path='/recipe/:id' element={<RecipeView/>}/>
+        <Route path='/edit/:id' element={<EditingView/>} />
       </Routes>
     </div>
   )

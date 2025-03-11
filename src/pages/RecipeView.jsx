@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import Heading from '../components/Heading'
 import { ClipLoader } from 'react-spinners'
-import { Trash } from 'lucide-react'
+import { Edit, Trash } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 const RecipeView = () => {
@@ -40,6 +40,7 @@ const RecipeView = () => {
         setIsLoading(false)
       }
     }
+
 
     useEffect(()=>{
       fetchRecipe()
@@ -78,7 +79,12 @@ const RecipeView = () => {
         </div>
       ))}
 
-<button  onClick={handleDelete} className='bg-red-500 mt-6 text-white flex  items-center py-3 rounded-lg justify-center w-full max-w-3xl'>
+<button  onClick={()=>navigate(`/edit/${id}`)} className='bg-amber-300 mt-6 text-white flex  items-center py-3 rounded-lg justify-center w-full max-w-3xl'>
+    <p className='font-bold text-lg'>Edit</p>
+    <Edit color='white'/>
+  </button>
+
+<button  onClick={handleDelete} className='bg-red-500 mt-2 text-white flex  items-center py-3 rounded-lg justify-center w-full max-w-3xl'>
     <p className='font-bold text-lg'>Delete</p>
     <Trash color='white'/>
   </button>

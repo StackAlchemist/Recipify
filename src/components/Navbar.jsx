@@ -1,11 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ButtonFilled from './ButtonFilled';
 import ButtonTransparent from './ButtonTransparent';
 import { Link, useLocation } from 'react-router-dom'; // FIXED: Should use `react-router-dom`
-import { Dot } from 'lucide-react';
+import { Dot, User } from 'lucide-react';
+import axios from 'axios';
+import { div } from 'framer-motion/client';
 
 const Navbar = () => {
   const location = useLocation();
+
+  const [user, setUser]= useState('')
+
+  const getUser = async () =>{
+    const authToken = localStorage.getItem('authToken')
+    console.log("Auth Token:", authToken);
+
+    if(!authToken){
+      console.log('no token found');
+    }
+
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/whoami`, {
+  headers: { Authorization: `Bearer ${authToken}` },
+  withCredentials: true,
+})
+console.log("API Response:", response.data);
+  setUser(response.data.user)
+  
+
+    }catch(err){
+      console.error('Failed to fetch user:', err);
+    }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   // Function to check active link
   const isActive = (path) => location.pathname === path;
@@ -41,9 +71,13 @@ const Navbar = () => {
         </div>
 
         {/* Auth Buttons */}
-        <div className="flex gap-2">
-          <ButtonTransparent content={'Login'} />
-          <ButtonFilled content={'Signup'} />
+        <div >
+
+         {user? <div className='flex'><User color='white'/><p className='text-white'>{user.name}</p></div>:
+          <div className="flex gap-2">
+          <Link to='/login'><ButtonTransparent content={'Login'} /></Link> 
+          <Link to='/signup'><ButtonFilled content={'Signup'} /></Link>
+          </div>}
         </div>
       </div>
 
@@ -56,3 +90,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+  

@@ -46,9 +46,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
       setIsLiked(false)
       console.error(err)
       toast.error("Couldn't like post")
-    } 
-
-    
+    }
   }
 
   const toggleLike = (e) => {

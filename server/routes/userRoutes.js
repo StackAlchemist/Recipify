@@ -1,5 +1,5 @@
 const express = require('express')
-const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes } = require('../controllers/userController.js')
+const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes } = require('../controllers/userController.js')
 const multer = require('multer')
 const path = require('path')
 
@@ -22,5 +22,6 @@ route.get('/getIndFood/:id', get_details)
 route.put('/like/:id', likePost)
 route.get('/like/:id', getLikes)
 route.delete('/getIndFood/:id', deleteRecipe)
+route.put('/getIndFood/:id', editRecipes)
 
 module.exports = route
