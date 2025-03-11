@@ -19,7 +19,11 @@ const Recipe = ({ image, name, desc, itemId }) => {
 
   const fetchLikes = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`,{
+        headers:{
+          'Authorization':`Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
       setLikeNo(res.data.likes);
     } catch (err) {
       console.error("Error fetching likes:", err);
@@ -33,6 +37,10 @@ const Recipe = ({ image, name, desc, itemId }) => {
       
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
         isLiked: !isLiked //send the req body as opposite of whatever our current state
+      }, {
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
       })
       setLikeNo(res.data.likes)
       setIsLiked(!isLiked)

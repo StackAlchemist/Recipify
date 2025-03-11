@@ -1,12 +1,14 @@
 import axios from 'axios'
 import { Eye, EyeOff } from 'lucide-react'
 import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
 const Signup = () => {
 
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name:'',
@@ -25,6 +27,8 @@ const Signup = () => {
       console.log('Login successful', response.data)
       toast.success('Welcome')
       localStorage.setItem('authToken', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
+      navigate('/')
     } catch (error) {
       console.error(error)
       if (error.response) {
@@ -113,7 +117,7 @@ const Signup = () => {
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account? 
-          <a href="#" className="text-emerald-600 font-medium hover:underline"> Log in</a>
+          <Link to="/login" className="text-emerald-600 font-medium hover:underline">Log in</Link>
         </p>
       </div>
     </div>

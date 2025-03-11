@@ -48,6 +48,26 @@ module.exports.signUp = async (req, res)=>{
     }
     
 }
+module.exports.login = async (req, res)=>{
+    try {
+        const {email, password} = req.body
+        const user = await UserAuth.login(email, password)
+        const token = createToken(user._id)
+        res.cookie('authToken', token, {httpOnly: true, maxAge: maxAge*1000})
+        res.status(200).json({ user: user._id, token }); //pass token and user as json
+
+    } catch (error) {
+        console.error('Login error:', error);
+        // const errors = handleErrors(error);
+        
+        if (error.message === 'User does not exist' || error.message === 'Wrong Credentials') {
+            return res.status(400).json({ error: error.message }); // 400 for validation errors
+        }
+    
+        res.status(500).json({ message: "Internal server error" }); // Keep 500 only for unexpected issues
+    }
+    
+}
 
 module.exports.checkUser = async (req, res)=>{
     try {
@@ -57,3 +77,12 @@ module.exports.checkUser = async (req, res)=>{
     }
 }
 
+module.exports.logout = async (req, res)=>{
+    try {
+        res.cookie('authToken','',{httpOnly: true,maxAge: 0})
+        res.status(200).json({message: 'Logout Successful'})//always send a response or else the frontend will wait indefinitely
+    } catch (error) {
+        console.error('Logout',error)
+        res.status(500).json({message: 'Internal Server Error'})
+    }   
+}

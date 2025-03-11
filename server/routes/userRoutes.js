@@ -2,6 +2,7 @@ const express = require('express')
 const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes } = require('../controllers/userController.js')
 const multer = require('multer')
 const path = require('path')
+const { requireAuth } = require('../middlewares/authMiddleware.js')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
