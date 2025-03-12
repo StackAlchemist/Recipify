@@ -11,8 +11,8 @@ if(!authorization) {
 const token = authorization.split(' ')[1]
 
 try{
-    const {_id} = jwt.verify(token, 'recipe')
-    req.user = await UserAuth.findOne(_id).select('name email')//select just name and email from the document with that id
+    const {id} = jwt.verify(token, 'recipe')
+    req.user = await UserAuth.findOne({_id: id}).select('name email')//select just name and email from the document with that id
     next();
 } catch (error){
     console.log(error)

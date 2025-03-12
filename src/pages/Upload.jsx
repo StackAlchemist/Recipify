@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CloudUpload, Plus, X } from "lucide-react";
 import { images } from "../assets/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router";
 
 const UploadPG = () => {
+  const { user } = useContext(AppContext)
+  const navigate = useNavigate()
   const [file, setFile] = useState(null);
   const [inputs, setInputs] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
@@ -15,6 +19,13 @@ const UploadPG = () => {
     ingredients: [''],
     image: null,
   })
+
+useEffect(()=>{
+  if(!user){
+    toast.warning('Login first to upload')
+    navigate('/login')
+  }
+},[user, navigate])
 
   const handleChange= (e)=>{
     setRecipe({...recipe, [e.target.name]: e.target.value})
@@ -40,7 +51,7 @@ const UploadPG = () => {
     setRecipe({...recipe, ingredients: updatedIngredients})
   }
 
-  console.log(recipe)
+  // console.log(recipe)
 
   const handleUpload = async(e)=>{
     e.preventDefault()

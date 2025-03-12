@@ -11,9 +11,12 @@ import UploadPG from './pages/Upload'
 import { ToastContainer } from 'react-toastify'
 import RecipeView from './pages/RecipeView'
 import EditingView from './pages/EditingView'
+import { AppContextProvider } from './context/AppContext'
+
 
 const App = () => {
   return (
+    <AppContextProvider>
     <div className=''>
       <ToastContainer position='top-center' hideProgressBar/>
       <Navbar/>
@@ -28,6 +31,7 @@ const App = () => {
         <Route path='/edit/:id' element={<EditingView/>} />
       </Routes>
     </div>
+    </AppContextProvider>
   )
 }
 

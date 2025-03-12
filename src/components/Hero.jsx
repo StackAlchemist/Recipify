@@ -9,7 +9,7 @@ const Hero = () => {
     background: "var(--accent)",
 }
   return (
-    <div className=" text-emerald-600 flex justify-center relative h-screen overflow-hidden md:pt-10 pt-2 ">
+    <div className=" text-emerald-600 flex justify-center relative md:h-screen h-[80vh] overflow-hidden md:pt-10 pt-0  ">
       <img src={images.leaf1} className="w-[600px] absolute -z-20 left-0 bottom-[2px]" alt="" />
       <img src={images.pill} className="w-[900px] absolute -z-20 -right-[150px] md:top-[220px] top-[300px] rotate-0" alt="" />
       

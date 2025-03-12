@@ -1,5 +1,5 @@
 const express = require('express')
-const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes } = require('../controllers/userController.js')
+const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes, searchRecipe } = require('../controllers/userController.js')
 const multer = require('multer')
 const path = require('path')
 const { requireAuth } = require('../middlewares/authMiddleware.js')
@@ -16,7 +16,7 @@ const upload = multer( {storage: storage} )
 
 const route = express.Router()
 
-route.get('/fetchUsers', fetchUsers)
+route.get('/search', searchRecipe)
 route.post('/upload',upload.single('image'), postRecipes)
 route.get('/getFeed', getFeed)
 route.get('/getIndFood/:id', get_details)

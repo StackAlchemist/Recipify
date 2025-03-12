@@ -1,13 +1,16 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import Heading from '../components/Heading'
 import { ClipLoader } from 'react-spinners'
 import { Edit, Trash } from 'lucide-react'
 import { toast } from 'react-toastify'
+import BackButton from '../components/BackButton'
+import { AppContext } from '../context/AppContext'
 
 const RecipeView = () => {
     const {id} = useParams()
+    const {user} = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(false)
     const [recipeData, setRecipeData] = useState(null)
     const navigate = useNavigate()
@@ -28,11 +31,14 @@ const RecipeView = () => {
     }
 
     const handleDelete = async () =>{
-      try {
-        setIsLoading(true)
+      try {if (user) {
+                setIsLoading(true)
          await axios.delete(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`)
           toast.success('Deleted Successfully!')
           navigate('/feed')
+      } 
+      toast.warn('Login to delete')
+
       } catch (err) {
         console.error(err)
         toast.error('Error deleting')
@@ -45,7 +51,8 @@ const RecipeView = () => {
     useEffect(()=>{
       fetchRecipe()
     },[])
-  return (
+  return (<>
+  <BackButton />
 <div className="flex flex-col items-center justify-center p-4">
   {isLoading ? (
     <ClipLoader className='flex justify-center items-center' color="#50C878" size={45}/>
@@ -53,7 +60,7 @@ const RecipeView = () => {
     <div className="flex flex-col sm:flex-row border border-gray-400 rounded-lg overflow-hidden shadow-md justify-between w-full max-w-3xl md:items-center items-start">
       {/* Recipe Text Section */}
       <div className="md:p-12 p-4 flex flex-col gap-2">
-        <h2 className="font-space-grotesk font-bold text-3xl">{recipeData.name}</h2>
+        <h2 className="font-space-grotesk text- font-bold text-3xl">{recipeData.name}</h2>
         <p className="text-gray-700">{recipeData.desc}</p>
       </div>
 
@@ -93,7 +100,7 @@ const RecipeView = () => {
 
 
 </div>
-
+</>
   )
 }
 

@@ -1,12 +1,22 @@
 const Recipe = require("../model/userModel");
 
-const fetchUsers = async (req, res) => {
-  console.log("req made");
+const searchRecipe = async (req, res) => {
+  
   try {
-    res.json({ users: ["userOne", "UserTwo", "userThree"] });
-    console.log("hello world");
+    const query = req.query.q;
+    if(!query){
+      return res.status(400).json({error: 'search query required'})
+    }
+
+    const results = await Recipe.find({name: {$regex: query, $options: "i"}})
+    
+    if (!results.length) {
+      return res.status(404).json({ error: "No recipes found" });
+  }
+
+    res.json(results);
   } catch (err) {
-    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -63,6 +73,7 @@ const deleteRecipe = async (req, res) => {
 };
 
 const likePost = async (req, res) => {
+
   const { id } = req.params;
   const { isLiked } = req.body;
   try {
@@ -119,7 +130,7 @@ const editRecipes = async (req, res) => {
 };
 
 module.exports = {
-  fetchUsers,
+  searchRecipe,
   postRecipes,
   getFeed,
   get_details,

@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { CloudUpload, Plus } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { IoCloudUploadSharp } from 'react-icons/io5'
 import { useNavigate, useParams } from 'react-router'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
+import { AppContext } from '../context/AppContext'
 const EditingView = () => {
 
     const { id } = useParams()
@@ -12,6 +13,15 @@ const EditingView = () => {
     const [isContentLoading, setIsContentLoading] = useState(false)
     const [recipeData, setRecipeData] = useState({ name: "", desc: "", ingredients: [] })
     const navigate = useNavigate()
+    const { user } = useContext(AppContext)
+
+    useEffect(()=>{
+      if(!user){
+        toast.warning('Login first to edit')
+        navigate('/login')
+      }
+    },[user, navigate])
+    
 
     const fetchRecipe = async()=>{
 

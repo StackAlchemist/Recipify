@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import Recipe from '../components/Recipe';
 import { ClipLoader, HashLoader } from 'react-spinners';
 import Heading from '../components/Heading';
+import SearchBar from '../components/SearchBar';
 
 const Feed = () => {
 
   const [feedData, setFeedData] = useState([])
   const [loading, setLoading] = useState(false);
+  const [searchData, setSearchData] = useState([]);
 
   const fetchAPI = async ()=>{
     try{    
@@ -29,9 +31,12 @@ const Feed = () => {
   },[])
 
   return (
-<div>
-  <div className='flex items-center justify-center my-10'>
+<div className=''>
+  
+
+  <div className='flex flex-col gap-3 items-center justify-center my-10'>
     <Heading text1={'Your'} text2={'Feed'}/>
+    <SearchBar setLoading={setLoading} setSearchData={setSearchData}/>
   </div>
 {loading ? (
   <div className="flex justify-center items-center h-screen w-full">
@@ -39,7 +44,9 @@ const Feed = () => {
   </div>
 ) : (
   <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-    {feedData.map((data, index) => (
+    {searchData.length > 0 ? searchData.map((data, index) => (
+      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.desc} itemId={data._id} likes={data.likes}/>
+    )): feedData.map((data, index) => (
       <Recipe key={index} image={data.imagePath} name={data.name} desc={data.desc} itemId={data._id} likes={data.likes}/>
     ))}
   </div>
