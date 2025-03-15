@@ -21,7 +21,7 @@ route.post('/upload',upload.single('image'), postRecipes)
 route.get('/getFeed', getFeed)
 route.get('/getIndFood/:id', get_details)
 route.put('/like/:id', likePost)
-route.get('/like/:id', getLikes)
+route.get('/like/:id', requireAuth, getLikes)
 route.delete('/getIndFood/:id', deleteRecipe)
 route.put('/getIndFood/:id', editRecipes)
 

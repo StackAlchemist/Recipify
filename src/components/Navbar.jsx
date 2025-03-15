@@ -13,7 +13,14 @@ const Navbar = () => {
   const [user, setUser] = useState("");
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
-
+  const storedUser = localStorage.getItem('username')
+  const navLinks = storedUser? [
+    { path: "/feed", label: "Feed" },
+    { path: "/upload", label: "Upload" },
+    { path: "/about", label: "About" },
+  ] : [
+    { path: "/about", label: "About" }
+  ];
 
 
   const logout = async()=>{
@@ -23,6 +30,8 @@ const Navbar = () => {
         withCredentials: true
       })
       localStorage.removeItem('authToken')
+      localStorage.removeItem('username')
+      localStorage.removeItem('userID')
       toast.success('Logout successful')
       navigate('/login')
     } catch (error) {
@@ -34,10 +43,9 @@ const Navbar = () => {
   useEffect(() => {
     const getUser = async () => {
       const authToken = localStorage.getItem("authToken");
-      console.log("Auth Token:", authToken);
-  
       if (!authToken) {
-        console.log("no token found");
+        console.log("No token found");
+        return;
       }
   
       try {
@@ -50,12 +58,21 @@ const Navbar = () => {
         );
         console.log("API Response:", response.data);
         setUser(response.data.user);
+        localStorage.setItem("username", response.data.user.name);
       } catch (err) {
         console.error("Failed to fetch user:", err);
       }
     };
     getUser();
   }, []);
+  
+
+  useEffect(()=>{
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUser({ name: storedUsername });
+    }
+  },[])
 
   // Function to check active link
   const isActive = (path) => location.pathname === path;
@@ -72,11 +89,7 @@ const Navbar = () => {
 
         {/* Nav Links */}
         <div className="flex gap-5">
-          {[
-            { path: "/feed", label: "Feed" },
-            { path: "/upload", label: "Upload" },
-            { path: "/about", label: "About" },
-          ].map((item) => (
+          {navLinks.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -97,11 +110,11 @@ const Navbar = () => {
 
         {/* Auth Buttons */}
         <div>
-          {user ? (
+          {localStorage.getItem('username') ? (
             <div className="flex gap-2">
             <div className="flex">
               <User color="white" />
-              <p className="text-white">{user.name}</p>
+              <p className="text-white">{localStorage.getItem('username')}</p>
             </div>
             <button onClick={logout} 
             // className="flex gap-2"

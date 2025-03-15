@@ -35,7 +35,7 @@ const FeaturedProducts = () => {
         </div>
 
       <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
-      {feedData.slice(0, 6).map((data, index) => (
+      {feedData.slice(0,3).map((data, index) => (
       <Recipe key={index} image={data.imagePath} name={data.name} desc={data.desc} itemId={data._id} />
     ))}
       </div>

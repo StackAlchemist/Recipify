@@ -14,6 +14,12 @@ const RecipeView = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [recipeData, setRecipeData] = useState(null)
     const navigate = useNavigate()
+    const storedUser = localStorage.getItem('username')
+
+    if(!storedUser){
+      // toast.error('you need to login first')
+      navigate('/login')
+    }
 
     const fetchRecipe = async()=>{
 
@@ -31,13 +37,11 @@ const RecipeView = () => {
     }
 
     const handleDelete = async () =>{
-      try {if (user) {
+      try {
                 setIsLoading(true)
          await axios.delete(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`)
           toast.success('Deleted Successfully!')
           navigate('/feed')
-      } 
-      toast.warn('Login to delete')
 
       } catch (err) {
         console.error(err)

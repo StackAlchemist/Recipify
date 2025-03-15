@@ -25,10 +25,11 @@ const Signup = () => {
         withCredentials: true,
       })
       console.log('Login successful', response.data)
-      toast.success('Welcome')
+      toast.success('Sign up Successful')
       localStorage.setItem('authToken', response.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
+      localStorage.setItem('userID', response.data.user)
       navigate('/')
+      window.location.reload()
     } catch (error) {
       console.error(error)
       if (error.response) {

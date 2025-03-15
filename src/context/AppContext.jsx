@@ -28,7 +28,9 @@ export const AppContextProvider = ({ children }) => {
           }
         );
         console.log("API Response:", response.data);
-        setUser(response.data.user);
+        // setUser(response.data.user);
+        // localStorage.setItem('username', user.name)
+        // console.log('username stored in local storage')
       } catch (err) {
         console.error("Failed to fetch user:", err);
       }

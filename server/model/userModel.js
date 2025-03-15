@@ -18,9 +18,8 @@ const RecipeSchema = new mongoose.Schema({
         required: true
     },
     likes: {
-        type: Number,
-        required: true,
-        default: 0
+        type: [String],
+        default: []
     }
 },{timestamps: true})
 

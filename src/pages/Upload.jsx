@@ -21,7 +21,8 @@ const UploadPG = () => {
   })
 
 useEffect(()=>{
-  if(!user){
+  const storedUser = localStorage.getItem('username')
+  if(!storedUser){
     toast.warning('Login first to upload')
     navigate('/login')
   }

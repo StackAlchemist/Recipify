@@ -75,16 +75,20 @@ const deleteRecipe = async (req, res) => {
 const likePost = async (req, res) => {
 
   const { id } = req.params;
-  const { isLiked } = req.body;
+  const { userId, isLiked } = req.body;
   try {
     const recipe = await Recipe.findByIdAndUpdate(id);
     if (!recipe) return res.status(404).send("Recipe doesn`t exist ");
 
-    recipe.likes = isLiked
-      ? (recipe.likes += 1)
-      : Math.max(recipe.likes - 1, 0);
-    recipe.save();
-    res.status(200).json({ likes: recipe.likes });
+    if(isLiked){
+      if(!recipe.likes.includes(userId)){
+        recipe.likes.push(userId)
+      }
+    } else{
+      recipe.likes = recipe.likes.filter((id)=> id !== userId)
+    }
+    await recipe.save();
+    res.status(200).json({ likes: recipe.likes.length });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
@@ -94,6 +98,7 @@ const likePost = async (req, res) => {
 const getLikes = async (req, res) => {
   try {
     const { id } = req.params;
+    // const userId = req.user.id
 
     // Find the recipe by ID
     const recipe = await Recipe.findById(id);
@@ -101,8 +106,13 @@ const getLikes = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    res.json({
-      likes: recipe.likes || 0, // Return number of likes
+      // Extract user ID from token if available
+      const userId = req.user ? req.user.id : null;
+      const likedByUser = userId ? recipe.likes.includes(userId) : false;
+
+    res.status(200).json({
+      likesCount: recipe.likes.length,  // Number of likes
+      likedByUser               // is it liked by the logged in user?
     });
   } catch (error) {
     console.error("Error fetching likes:", error);

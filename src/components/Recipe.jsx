@@ -18,32 +18,61 @@ const Recipe = ({ image, name, desc, itemId }) => {
   
 
   const fetchLikes = async () => {
+    if (!itemId) {
+      console.warn("No itemId provided, skipping fetchLikes.");
+      return;
+    }
+  
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      console.warn("No authToken found in localStorage.");
+      return;
+    }
+  
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`,{
-        headers:{
-          'Authorization':`Bearer ${localStorage.getItem('authToken')}`
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
         }
       });
-      setLikeNo(res.data.likes);
+  
+      const likesCount = res.data.likesCount || 0;
+      const likedByUser = res.data.likedByUser;
+  
+      
+      setLikeNo(likesCount);
+      setIsLiked(likedByUser);
     } catch (err) {
       console.error("Error fetching likes:", err);
     }
   };
   
+  
 
 
   const likeRecipe = async ()=>{
     try{    
-      
+      const userID = localStorage.getItem('userID')
+
+
+      if (!userID) {
+        toast.error("User not logged in!");
+        return;
+      }
+
+
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
-        isLiked: !isLiked //send the req body as opposite of whatever our current state
+        isLiked: !isLiked,//send the req body as opposite of whatever our current state
+        userId: userID 
       }, {
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         }
       })
-      setLikeNo(res.data.likes)
+      setLikeNo(res.data.likes.length)
       setIsLiked(!isLiked)
+
+      
       console.log(res.data.likes)
       if(!isLiked){
         toast.success('Liked!')
@@ -64,7 +93,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
 
   useEffect(()=>{
     fetchLikes()
-  }, [itemId])
+  }, [isLiked, likeNo])
   // console.log(`${image}`)
   return (
     <div className="p-4" onClick={handleRouting}>
