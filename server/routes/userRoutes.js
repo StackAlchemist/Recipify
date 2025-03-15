@@ -1,5 +1,5 @@
 const express = require('express')
-const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes, searchRecipe } = require('../controllers/userController.js')
+const { fetchUsers, postRecipes, getFeed, get_details, deleteRecipe, likePost, unLikePost, getLikes, editRecipes, searchRecipe, getLikedRecipes } = require('../controllers/userController.js')
 const multer = require('multer')
 const path = require('path')
 const { requireAuth } = require('../middlewares/authMiddleware.js')
@@ -22,7 +22,8 @@ route.get('/getFeed', getFeed)
 route.get('/getIndFood/:id', get_details)
 route.put('/like/:id', likePost)
 route.get('/like/:id', requireAuth, getLikes)
-route.delete('/getIndFood/:id', deleteRecipe)
+route.get('/liked-recipes', requireAuth, getLikedRecipes)
+route.delete('/getIndFood/:id',requireAuth, deleteRecipe)
 route.put('/getIndFood/:id', editRecipes)
 
 module.exports = route

@@ -15,6 +15,8 @@ const RecipeView = () => {
     const [recipeData, setRecipeData] = useState(null)
     const navigate = useNavigate()
     const storedUser = localStorage.getItem('username')
+    const userId = localStorage.getItem('userID')
+    const [isOwned, setIsOwned] = useState(false)
 
     if(!storedUser){
       // toast.error('you need to login first')
@@ -25,8 +27,11 @@ const RecipeView = () => {
 
       try {
         setIsLoading(true)
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`)
-          setRecipeData(response.data)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`,{
+        params: {userId: userId}
+      })
+          setRecipeData(response.data.recipe)
+          setIsOwned(response.data.isOwned)
           console.log(response.data)
         
     } catch (error) {
@@ -90,7 +95,7 @@ const RecipeView = () => {
         </div>
       ))}
 
-<button  onClick={()=>navigate(`/edit/${id}`)} className='bg-amber-300 mt-6 text-white flex  items-center py-3 rounded-lg justify-center w-full max-w-3xl'>
+{isOwned ?<><button  onClick={()=>navigate(`/edit/${id}`)} className='bg-amber-300 mt-6 text-white flex  items-center py-3 rounded-lg justify-center w-full max-w-3xl'>
     <p className='font-bold text-lg'>Edit</p>
     <Edit color='white'/>
   </button>
@@ -99,6 +104,7 @@ const RecipeView = () => {
     <p className='font-bold text-lg'>Delete</p>
     <Trash color='white'/>
   </button>
+  </>:''}
     </div>
   )}
 

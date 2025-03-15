@@ -22,13 +22,16 @@ const searchRecipe = async (req, res) => {
 
 const postRecipes = async (req, res) => {
   console.log(req.file);
+  
 
   try {
     const recipe = await Recipe.create({
       name: req.body.name,
       desc: req.body.desc,
       ingredients: req.body.ingredients,
+       userId: req.body.userId,
       imagePath: req.file ? "/uploads/" + req.file.filename : null,
+      
     });
     res.status(201).json({ message: "recipe successfully created" });
   } catch (err) {
@@ -50,10 +53,16 @@ const getFeed = async (req, res) => {
 
 const get_details = async (req, res) => {
   const { id } = req.params;
+  const { userId } = req.query;
+  
+
   try {
     const recipe = await Recipe.findById(id);
+
     if (!recipe) return res.status(404).send("recipe not found");
-    res.status(200).json(recipe);
+    const isOwned = recipe.userId === userId;
+    
+    res.status(200).json({recipe, isOwned});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
@@ -62,9 +71,15 @@ const get_details = async (req, res) => {
 
 const deleteRecipe = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user
+
   try {
-    const recipe = await Recipe.findByIdAndDelete(id);
-    if (!recipe) return res.status(404).send("Recipe not found");
+    const recipe = await Recipe.findById(id)
+    if(recipe.userId.toString()!==userId){
+      return res.status(403).json({ message: "Unauthorized: You can't edit this recipe" });
+    }
+     const deleteRecipe = await Recipe.findByIdAndDelete(id);
+    if (!deleteRecipe) return res.status(404).send("Recipe not found");
     res.status(200).json({ message: "Deleted successfully!" });
   } catch (err) {
     console.error(err);
@@ -120,9 +135,38 @@ const getLikes = async (req, res) => {
   }
 };
 
+const getLikedRecipes = async (req, res) => {
+  try {
+    const {userId} = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    
+    // Find all recipes where the userId exists in the likes array
+    const likedRecipes = await Recipe.find({ likes: { $in: [userId] } });
+    
+    if (likedRecipes.length === 0) {
+      return res.status(404).json({ message: 'No liked recipes found' });
+    }
+
+    res.status(200).json({ likedRecipes });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
 const editRecipes = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user
+
+    if (recipe.userId.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized: You can't edit this recipe" });
+    }
+
     const recipe = await Recipe.findByIdAndUpdate(
       id,
       {
@@ -148,4 +192,5 @@ module.exports = {
   likePost,
   getLikes,
   editRecipes,
+  getLikedRecipes
 };

@@ -14,13 +14,14 @@ const EditingView = () => {
     const [recipeData, setRecipeData] = useState({ name: "", desc: "", ingredients: [] })
     const navigate = useNavigate()
     const { user } = useContext(AppContext)
+    const userId = localStorage.getItem('userID')
 
     useEffect(()=>{
-      if(!user){
+      if(!userId){
         toast.warning('Login first to edit')
         navigate('/login')
       }
-    },[user, navigate])
+    },[])
     
 
     const fetchRecipe = async()=>{

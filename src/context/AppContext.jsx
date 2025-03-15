@@ -13,10 +13,10 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     const getUser = async () => {
       const authToken = localStorage.getItem("authToken");
-      console.log("Auth Token:", authToken);
+      // console.log("Auth Token:", authToken);
   
       if (!authToken) {
-        console.log("no token found");
+        // console.log("no token found");
       }
   
       try {

@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify'
 import RecipeView from './pages/RecipeView'
 import EditingView from './pages/EditingView'
 import { AppContextProvider } from './context/AppContext'
+import LikedPosts from './pages/LikedPosts'
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='/upload' element={<UploadPG/>}/>
         <Route path='/recipe/:id' element={<RecipeView/>}/>
         <Route path='/edit/:id' element={<EditingView/>} />
+        <Route path='/liked-post' element={<LikedPosts/>} />
       </Routes>
     </div>
     </AppContextProvider>

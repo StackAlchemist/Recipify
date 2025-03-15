@@ -17,7 +17,8 @@ const Navbar = () => {
   const navLinks = storedUser? [
     { path: "/feed", label: "Feed" },
     { path: "/upload", label: "Upload" },
-    { path: "/about", label: "About" },
+    // { path: "/about", label: "About" },
+    { path: "/liked-post", label: "Faves" },
   ] : [
     { path: "/about", label: "About" }
   ];

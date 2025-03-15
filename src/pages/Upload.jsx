@@ -55,6 +55,7 @@ useEffect(()=>{
   // console.log(recipe)
 
   const handleUpload = async(e)=>{
+    
     e.preventDefault()
     const formData =  new FormData()
     formData.append('name', recipe.name)
@@ -63,7 +64,13 @@ useEffect(()=>{
     recipe.ingredients.forEach((ingredient, index)=>{
       formData.append(`ingredients[${index}]`, ingredient)
     })
-
+    const userId = localStorage.getItem('userID')
+    if(!userId){
+      toast.error('login and try again')
+      setIsLoading(false)
+      return;
+    }
+    formData.append('userId', userId)
     try{
       setIsLoading(true)
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData,
@@ -72,6 +79,7 @@ useEffect(()=>{
       console.log(response.data)
       setIsLoading(false)
       toast.success('Recipe Successfully Uploaded!')
+      navigate('/feed')
     }catch(err){
       setIsLoading(false)
       console.error("Error uploading:", err.response ? err.response.data : err.message);
