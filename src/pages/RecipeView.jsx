@@ -41,20 +41,28 @@ const RecipeView = () => {
     }
     }
 
-    const handleDelete = async () =>{
-      try {
-                setIsLoading(true)
-         await axios.delete(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`)
-          toast.success('Deleted Successfully!')
-          navigate('/feed')
-
-      } catch (err) {
-        console.error(err)
-        toast.error('Error deleting')
-      }finally{
-        setIsLoading(false)
+    const handleDelete = async () => {
+      const userId = localStorage.getItem('userID');
+      
+      if (!userId) {
+          toast.error('User not authenticated');
+          return;
       }
-    }
+  
+      try {
+          setIsLoading(true);
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/${userId}/getIndFood/${id}`);
+  
+          toast.success('Deleted Successfully!');
+          navigate('/feed');
+      } catch (err) {
+          console.error(err);
+          toast.error('Error deleting');
+      } finally {
+          setIsLoading(false);
+      }
+  };
+  
 
 
     useEffect(()=>{

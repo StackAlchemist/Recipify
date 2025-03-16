@@ -69,17 +69,21 @@ const get_details = async (req, res) => {
   }
 };
 
-const deleteRecipe = async (req, res) => {
-  const { id } = req.params;
-  const userId = req.user
+const deleteRecipe = async (req, res) => {//check this when online
+  const { id, userId } = req.params;
+  // const userId = req.user
 
   try {
     const recipe = await Recipe.findById(id)
-    if(recipe.userId.toString()!==userId){
-      return res.status(403).json({ message: "Unauthorized: You can't edit this recipe" });
+    if(!recipe){
+      return res.status(404).json({ message: "Recipe not found" });
     }
-     const deleteRecipe = await Recipe.findByIdAndDelete(id);
-    if (!deleteRecipe) return res.status(404).send("Recipe not found");
+
+    if (recipe.userId.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized: You can't delete this recipe" });
+    }
+    
+    await Recipe.findByIdAndDelete(id);
     res.status(200).json({ message: "Deleted successfully!" });
   } catch (err) {
     console.error(err);
@@ -110,7 +114,7 @@ const likePost = async (req, res) => {
   }
 };
 
-const getLikes = async (req, res) => {
+const getLikes = async (req, res) => {//get the userId from frontend to likes can show to not registered users, when you're online
   try {
     const { id } = req.params;
     // const userId = req.user.id
@@ -158,7 +162,7 @@ const getLikedRecipes = async (req, res) => {
   }
 }
 
-const editRecipes = async (req, res) => {
+const editRecipes = async (req, res) => {//check this when online
   try {
     const { id } = req.params;
     const userId = req.user

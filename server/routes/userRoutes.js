@@ -23,7 +23,7 @@ route.get('/getIndFood/:id', get_details)
 route.put('/like/:id', likePost)
 route.get('/like/:id', requireAuth, getLikes)
 route.get('/liked-recipes', requireAuth, getLikedRecipes)
-route.delete('/getIndFood/:id',requireAuth, deleteRecipe)
-route.put('/getIndFood/:id', editRecipes)
+route.delete('/:userId/getIndFood/:id', deleteRecipe)
+route.put('/getIndFood/:id',requireAuth, editRecipes)//requireAuth added offline, check if it works
 
 module.exports = route

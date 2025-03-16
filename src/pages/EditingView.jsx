@@ -29,7 +29,7 @@ const EditingView = () => {
         try {
           setIsContentLoading(true)
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`)
-            setRecipeData(response.data)
+            setRecipeData(response.data.recipe)
             console.log(response.data)
           
       } catch (error) {
