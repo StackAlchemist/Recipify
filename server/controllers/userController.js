@@ -1,3 +1,4 @@
+const { Rewind } = require("lucide-react");
 const Recipe = require("../model/userModel");
 
 const searchRecipe = async (req, res) => {
@@ -92,52 +93,60 @@ const deleteRecipe = async (req, res) => {//check this when online
 };
 
 const likePost = async (req, res) => {
-
   const { id } = req.params;
   const { userId, isLiked } = req.body;
-  try {
-    const recipe = await Recipe.findByIdAndUpdate(id);
-    if (!recipe) return res.status(404).send("Recipe doesn`t exist ");
 
-    if(isLiked){
-      if(!recipe.likes.includes(userId)){
-        recipe.likes.push(userId)
+  console.log("Received userId:", userId); // Debugging
+
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
+  try {
+    const recipe = await Recipe.findById(id);  // Fix: Use findById instead of findByIdAndUpdate
+    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
+
+    if (isLiked) {
+      if (!recipe.likes.includes(userId)) {
+        recipe.likes.push(userId);
       }
-    } else{
-      recipe.likes = recipe.likes.filter((id)=> id !== userId)
+    } else {
+      recipe.likes = recipe.likes.filter((uid) => uid !==userId);
     }
-    await recipe.save();
+
+    await recipe.save(); // Fix: Save the document after modification
     res.status(200).json({ likes: recipe.likes.length });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    console.error("Error updating likes:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-const getLikes = async (req, res) => {//get the userId from frontend to likes can show to not registered users, when you're online
+
+const getLikes = async (req, res) => {
   try {
     const { id } = req.params;
-    // const userId = req.user.id
+    const { userId } = req.query; 
 
-    // Find the recipe by ID
+    
     const recipe = await Recipe.findById(id);
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-      // Extract user ID from token if available
-      const userId = req.user ? req.user.id : null;
-      const likedByUser = userId ? recipe.likes.includes(userId) : false;
+    
+    const likedByUser = userId ? recipe.likes.includes(userId) : false;
 
     res.status(200).json({
-      likesCount: recipe.likes.length,  // Number of likes
-      likedByUser               // is it liked by the logged in user?
+      likesCount: recipe.likes.length,  
+      likedByUser,                     
     });
   } catch (error) {
     console.error("Error fetching likes:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const getLikedRecipes = async (req, res) => {
   try {
@@ -187,6 +196,21 @@ const editRecipes = async (req, res) => {//check this when online
   }
 };
 
+const analytics = async (req, res)=>{
+  const {userId} = req.params;
+  try {
+    const topRecipe = await Recipe.find({userId})
+    .sort({likes: -1})
+    .limit(3);
+
+    if(!topRecipe)return res.status(404).json({message: 'user recipe not found'})
+      res.status(200).json({analysis: topRecipe})
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({message: 'server error'})
+  }
+}
+
 module.exports = {
   searchRecipe,
   postRecipes,
@@ -196,5 +220,6 @@ module.exports = {
   likePost,
   getLikes,
   editRecipes,
-  getLikedRecipes
+  getLikedRecipes,
+  analytics
 };

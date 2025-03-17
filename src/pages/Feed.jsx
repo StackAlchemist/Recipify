@@ -4,12 +4,21 @@ import Recipe from '../components/Recipe';
 import { ClipLoader, HashLoader } from 'react-spinners';
 import Heading from '../components/Heading';
 import SearchBar from '../components/SearchBar';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 const Feed = () => {
 
   const [feedData, setFeedData] = useState([])
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState([]);
+  const userId  = localStorage.getItem('userID')
+  const navigate = useNavigate()
+  
+  if(!userId){
+    toast.warn('cannot access this page, login')
+    navigate('/login')
+  }
 
   const fetchAPI = async ()=>{
     try{    

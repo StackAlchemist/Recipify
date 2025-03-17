@@ -36,7 +36,7 @@ const LikedPosts = () => {
         <div className='pl-4 mt-6'>
         <Heading text1={'Your'} text2={'liked posts'}/>
         </div>
-        <div>
+        <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
             {
                 data?.map((recipe, index)=>(
                     <Recipe key={index} image={recipe.imagePath} name={recipe.name} desc={recipe.desc} itemId={recipe._id} likes={recipe.likes}/>

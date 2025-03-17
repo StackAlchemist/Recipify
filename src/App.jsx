@@ -13,13 +13,14 @@ import RecipeView from './pages/RecipeView'
 import EditingView from './pages/EditingView'
 import { AppContextProvider } from './context/AppContext'
 import LikedPosts from './pages/LikedPosts'
+import Analytics from './pages/Analytics'
 
 
 const App = () => {
   return (
     <AppContextProvider>
     <div className=''>
-      <ToastContainer position='top-center' hideProgressBar/>
+      <ToastContainer position='top-center'/>
       <Navbar/>
       <Routes>
         <Route path='/' element={<Home />}/>
@@ -31,6 +32,7 @@ const App = () => {
         <Route path='/recipe/:id' element={<RecipeView/>}/>
         <Route path='/edit/:id' element={<EditingView/>} />
         <Route path='/liked-post' element={<LikedPosts/>} />
+        <Route path='/analytics' element={<Analytics/>} />
       </Routes>
     </div>
     </AppContextProvider>

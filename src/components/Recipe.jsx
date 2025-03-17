@@ -26,18 +26,21 @@ const Recipe = ({ image, name, desc, itemId }) => {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
       console.warn("No authToken found in localStorage.");
-      return;
+     
     }
+
+    const userId = localStorage.getItem('userID')
   
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
+        params: {userId: userId},
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
       });
-  
       const likesCount = res.data.likesCount || 0;
       const likedByUser = res.data.likedByUser;
+      console.log(res.data)
   
       
       setLikeNo(likesCount);
@@ -53,6 +56,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
   const likeRecipe = async ()=>{
     try{    
       const userID = localStorage.getItem('userID')
+      console.log(userID)
 
 
       if (!userID) {
@@ -69,7 +73,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         }
       })
-      setLikeNo(res.data.likes.length)
+      setLikeNo(res.data.likes)
       setIsLiked(!isLiked)
 
       
