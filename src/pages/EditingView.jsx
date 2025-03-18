@@ -40,10 +40,14 @@ const EditingView = () => {
       }
 
     const handleEdit = async(e)=>{
+      const authToken = localStorage.getItem('authToken')
         e.preventDefault() 
     try {
        await axios.put(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`, recipeData, {
-        headers: {'Content-Type':'application/json'}
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
       })
       setIsLoading(true)
       toast.success('Edited Successfully')

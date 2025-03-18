@@ -174,9 +174,10 @@ const getLikedRecipes = async (req, res) => {
 const editRecipes = async (req, res) => {//check this when online
   try {
     const { id } = req.params;
-    const userId = req.user
-
-    if (recipe.userId.toString() !== userId) {
+    const userId = req.user._id.toString()
+    console.log(userId)
+    const foundRecipe = await Recipe.findById({_id: id})
+    if (foundRecipe.userId !== userId) {
       return res.status(403).json({ message: "Unauthorized: You can't edit this recipe" });
     }
 
