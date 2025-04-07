@@ -27,4 +27,4 @@ route.delete('/:userId/getIndFood/:id', deleteRecipe)
 route.put('/getIndFood/:id',requireAuth, editRecipes)//requireAuth added offline, check if it works
 route.get('/analytics/:userId', analytics)
 
-module.exports = route
+module.exports = route 

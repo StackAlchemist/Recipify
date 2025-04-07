@@ -29,8 +29,8 @@ const Login = () => {
       localStorage.setItem('userID', response.data.user)
       navigate('/')
       window.location.reload()
-    } catch (error) {
-      console.error(error)
+    } catch (error) { 
+      console.error(error.message)
       if (error.response) {
         const errorMessage = error.response.data.error || "Login failed";
         toast.error(errorMessage);
