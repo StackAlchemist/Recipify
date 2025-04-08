@@ -38,7 +38,7 @@ export const setRecipe = async (name: string, desc: string, ingredients: string[
         const [newRecipe] = await db.withSchema('public').insert(basicData).into('recipes').returning('*');
         const ingredientData = ingredients.map(ingredient => ({
             recipe_id: newRecipe.id,
-            ingredients
+            ingredient
         }));
 
         console.log("Inserted recipe:", newRecipe);
