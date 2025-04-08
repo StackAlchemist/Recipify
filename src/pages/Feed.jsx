@@ -23,7 +23,8 @@ const Feed = () => {
   const fetchAPI = async ()=>{
     try{    
       setLoading(true);
-      const response =await axios.get(`${import.meta.env.VITE_GET_FEED}`)
+      // const response =await axios.get(`${import.meta.env.VITE_GET_FEED}`)
+      const response = await axios.get('http://localhost:4000/recipes')
       setFeedData(response.data)
       console.log(response.data);
     }catch(err){
@@ -54,11 +55,12 @@ const Feed = () => {
 ) : (
   <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
     {searchData.length > 0 ? searchData.map((data, index) => (
-      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.desc} itemId={data._id} likes={data.likes}/>
+      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
     )): feedData.map((data, index) => (
-      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.desc} itemId={data._id} likes={data.likes}/>
+      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
     ))}
   </div>
+
 )}
 
 </div>

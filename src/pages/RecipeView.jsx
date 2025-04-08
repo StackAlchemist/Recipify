@@ -17,6 +17,7 @@ const RecipeView = () => {
     const storedUser = localStorage.getItem('username')
     const userId = localStorage.getItem('userID')
     const [isOwned, setIsOwned] = useState(false)
+    const [ingredients, setIngredients] = useState()
 
     if(!storedUser){
       // toast.error('you need to login first')
@@ -27,10 +28,13 @@ const RecipeView = () => {
 
       try {
         setIsLoading(true)
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`,{
+      // const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/getIndFood/${id}`
+        const response = await axios.get(`http://localhost:4000/indierecipes/${id}`
+        ,{
         params: {userId: userId}
       })
           setRecipeData(response.data.recipe)
+          setIngredients(response.data.ingredients)
           setIsOwned(response.data.isOwned)
           console.log(response.data)
         
@@ -93,10 +97,10 @@ const RecipeView = () => {
   )}
 
   {/* Ingredients List */}
-  {recipeData?.ingredients?.length > 0 && (
+  {ingredients?.length > 0 && (
     <div className="mt-6 flex flex-col gap-2 w-full max-w-3xl">
       <h3 className="text-xl font-semibold">Ingredients</h3>
-      {recipeData.ingredients.map((ingredient, index) => (
+      {ingredients.map((ingredient, index) => (
         <div key={index} className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
           <Heading text1={index + 1} />
           <span className="text-gray-800">{ingredient}</span>
