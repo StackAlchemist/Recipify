@@ -13,8 +13,9 @@ const Analytics = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/analytics/${userId}`
+        `http://localhost:4000/user/analytics/${userId}`,
       );
+      console.log(response)
       setAnalytics(response.data.analysis);
     } catch (error) {
       toast.error("Error loading analytics");
@@ -49,7 +50,7 @@ const Analytics = () => {
                 className="border border-gray-300 rounded-lg flex items-center p-4 gap-4 bg-gray-50 shadow-sm"
               >
                 <img
-                  src={`../../server${item.imagePath}`}
+                  src={`../../server2${item.image_path}`}
                   alt={item.name}
                   className="w-[300px] h-[180px] object-cover rounded-lg bg-gray-300"
                 />
@@ -57,9 +58,9 @@ const Analytics = () => {
                 <div className="flex flex-col flex-1 gap-3">
                   <h3 className="font-semibold text-2xl">{item.name}</h3>
                   <p className="text-sm text-gray-700">{item.desc}</p>
-                  <p className="text-sm flex items-center gap-2 text-gray-800">
+                  {/* <p className="text-sm flex items-center gap-2 text-gray-800">
                     <FaHeart className="text-red-500" /> {item.likes.length}
-                  </p>
+                  </p> */}
                 </div>
 
                 <div className="w-10 h-10 bg-gray-300 rounded-full"></div>

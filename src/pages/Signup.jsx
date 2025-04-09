@@ -21,13 +21,15 @@ const Signup = () => {
   const auth = async()=>{
     setIsLoading(true)
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, formData, {
-        withCredentials: true,
+      // const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, 
+      const response = await axios.post('http://localhost:4000/signup',
+        formData, {
+        withCredentials: true
       })
       console.log('Login successful', response.data)
       toast.success('Sign up Successful')
       localStorage.setItem('authToken', response.data.token)
-      localStorage.setItem('userID', response.data.user)
+      localStorage.setItem('userID', response.data.userIdq)
       navigate('/')
       window.location.reload()
     } catch (error) {

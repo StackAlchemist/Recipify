@@ -87,7 +87,7 @@ const RecipeView = () => {
 
       {/* Recipe Image */}
       <img
-        src={`../../server${recipeData.imagePath}`}
+        src={`../../server2${recipeData.image_path}`}
         alt={recipeData.name}
         className="w-full sm:w-1/2 h-auto object-cover"
       />

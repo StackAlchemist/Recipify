@@ -55,9 +55,9 @@ const Feed = () => {
 ) : (
   <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
     {searchData.length > 0 ? searchData.map((data, index) => (
-      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
+      <Recipe key={index} image={data.image_path} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
     )): feedData.map((data, index) => (
-      <Recipe key={index} image={data.imagePath} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
+      <Recipe key={index} image={data.image_path} name={data.name} desc={data.description} itemId={data.id} likes={data.likes}/>
     ))}
   </div>
 

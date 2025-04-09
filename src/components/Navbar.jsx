@@ -51,15 +51,16 @@ const Navbar = () => {
   
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/auth/whoami`,
+          // `${import.meta.env.VITE_API_URL}/auth/whoami`,
+          `http://localhost:4000/whoami`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
             withCredentials: true,
           }
         );
         console.log("API Response:", response.data);
-        setUser(response.data.user);
-        localStorage.setItem("username", response.data.user.name);
+        setUser(response.data.username);
+        localStorage.setItem("username", response.data.username);
       } catch (err) {
         console.error("Failed to fetch user:", err);
       }

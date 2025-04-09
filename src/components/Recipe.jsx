@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { images } from "../assets/assets";
-import { Heart } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -14,98 +12,81 @@ const Recipe = ({ image, name, desc, itemId }) => {
   };
 
   const [isLiked, setIsLiked] = useState(false);
-  const [likeNo, setLikeNo] = useState(0)
-  
+  const [likeNo, setLikeNo] = useState(0);
+
+  const authToken = localStorage.getItem("authToken");
+  const userId = localStorage.getItem("userID");
 
   const fetchLikes = async () => {
-    if (!itemId) {
-      console.warn("No itemId provided, skipping fetchLikes.");
+    if (!itemId || !userId) {
+      console.warn("No itemId or userId provided, skipping fetchLikes.");
       return;
     }
-  
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
-      console.warn("No authToken found in localStorage.");
-     
-    }
 
-    const userId = localStorage.getItem('userID')
-  
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
-        params: {userId: userId},
+      const res = await axios.get(`http://localhost:4000/likes/${itemId}`, {
+        params: { userId },
         headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
+          Authorization: `Bearer ${authToken}`,
+        },
       });
+
       const likesCount = res.data.likesCount || 0;
       const likedByUser = res.data.likedByUser;
-      console.log(res.data)
-  
-      
+
       setLikeNo(likesCount);
       setIsLiked(likedByUser);
     } catch (err) {
       console.error("Error fetching likes:", err);
     }
   };
-  
-  
 
-
-  const likeRecipe = async ()=>{
-    try{    
-      const userID = localStorage.getItem('userID')
-      console.log(userID)
-
-
-      if (!userID) {
-        toast.error("User not logged in!");
-        return;
-      }
-
-
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/like/${itemId}`, {
-        isLiked: !isLiked,//send the req body as opposite of whatever our current state
-        userId: userID 
-      }, {
-        headers:{
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
-      })
-      setLikeNo(res.data.likes)
-      setIsLiked(!isLiked)
-
-      
-      console.log(res.data.likes)
-      if(!isLiked){
-        toast.success('Liked!')
-      }else{
-        toast.success('UnLiked!')
-      }
-    }catch(err){
-      setIsLiked(false)
-      console.error(err)
-      toast.error("Couldn't like post")
+  const likeRecipe = async () => {
+    if (!userId) {
+      toast.error("User not logged in!");
+      return;
     }
-  }
 
-  const toggleLike = (e) => {
-    e.stopPropagation()
-    likeRecipe()
+    try {
+      const res = await axios.put(
+        `http://localhost:4000/like/${itemId}`,
+        {
+          isLiked: !isLiked, // Toggle the like status
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      setLikeNo(res.data.likes); // Update the likes count
+      setIsLiked(!isLiked); // Toggle like status
+
+      toast.success(isLiked ? "Unliked!" : "Liked!");
+    } catch (err) {
+      console.error("Error liking/unliking recipe:", err);
+      toast.error("Couldn't like post");
+    }
   };
 
-  useEffect(()=>{
-    fetchLikes()
-  }, [isLiked, likeNo])
-  // console.log(`${image}`)
+  const toggleLike = (e) => {
+    e.stopPropagation();
+    likeRecipe();
+  };
+
+  useEffect(() => {
+    fetchLikes();
+  }, [itemId, userId]); // Only fetch likes when itemId or userId changes
+
   return (
     <div className="p-4" onClick={handleRouting}>
       <div className="relative overflow-hidden rounded-2xl shadow-lg group">
         {/* Recipe Image */}
         <img
           className="w-full h-80 object-cover rounded-2xl transition-transform duration-300 ease-in-out group-hover:scale-110"
-          src={`../../server${image}`}
+          src={`../../server2${image}`}
           alt="recipe image"
         />
 
@@ -119,20 +100,17 @@ const Recipe = ({ image, name, desc, itemId }) => {
 
           {/* Favorite Button */}
           <div className="flex flex-col justify-center items-center">
-
-         
-          <button
-            onClick={toggleLike}
-            className="bg-white p-3 rounded-full shadow-md transition-all duration-300 
-             hover:bg-gray-200 hover:scale-110 active:scale-90">
-            {isLiked ? (
-              <FaHeart className="text-red-500 transition-all duration-300" />
-            ) : (
-              <FaRegHeart className="text-gray-500 transition-all duration-300" />
-            )}
-            
-          </button>
-          <p className="text-white">{likeNo}</p>
+            <button
+              onClick={toggleLike}
+              className="bg-white p-3 rounded-full shadow-md transition-all duration-300 hover:bg-gray-200 hover:scale-110 active:scale-90"
+            >
+              {isLiked ? (
+                <FaHeart className="text-red-500 transition-all duration-300" />
+              ) : (
+                <FaRegHeart className="text-gray-500 transition-all duration-300" />
+              )}
+            </button>
+            <p className="text-white">{likeNo}</p>
           </div>
         </div>
       </div>

@@ -77,7 +77,7 @@ useEffect(()=>{
         const response = await axios.post('http://localhost:4000/upload'
         , formData,
         {headers: {'Content-Type':
-          'application/json'
+          'multipart/form-data'
         }}
       )
       console.log(response.data)
@@ -97,7 +97,7 @@ useEffect(()=>{
       <form className="w-full max-w-md bg-white/40 shadow-lg rounded-xl mt-20 py-10 px-6 flex flex-col" onSubmit={handleUpload}>
         
         {/* Image Upload Section */}
-        {/* <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:border-emerald-500">
+         <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:border-emerald-500">
           {!file ? (
             <label className="flex flex-col items-center justify-center w-full h-48 gap-2 cursor-pointer">
               <img src={images.upload_illustration} className="w-40 h-40 text-gray-500" />
@@ -116,7 +116,7 @@ useEffect(()=>{
               </button>
             </div>
           )}
-        </div> */}
+        </div> 
 
         {/* Input Fields */}
         <div className="mt-4 w-full">
