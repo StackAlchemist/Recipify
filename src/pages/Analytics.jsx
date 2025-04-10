@@ -57,7 +57,7 @@ const Analytics = () => {
 
                 <div className="flex flex-col flex-1 gap-3">
                   <h3 className="font-semibold text-2xl">{item.name}</h3>
-                  <p className="text-sm text-gray-700">{item.desc}</p>
+                  <p className="text-sm text-gray-700">{item.description}</p>
                   {/* <p className="text-sm flex items-center gap-2 text-gray-800">
                     <FaHeart className="text-red-500" /> {item.likes.length}
                   </p> */}

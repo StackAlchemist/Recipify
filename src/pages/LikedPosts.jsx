@@ -8,24 +8,30 @@ import { useNavigate } from 'react-router'
 const LikedPosts = () => {
     const [data, setData] = useState([])
     const navigate = useNavigate()
-    const fetchLikedPosts = async ()=>{
-        const userId = localStorage.getItem('userID')
-        const authToken = localStorage.getItem('authToken')
-
+    const fetchLikedPosts = async () => {
+        const userId = localStorage.getItem('userID');
+        const authToken = localStorage.getItem('authToken');
+    
         if (!userId || !authToken) {
-            toast.error('You need to be logged in')
-            navigate('/login')
-            return; // Ensure we exit the function if not logged in
+          toast.error('You need to be logged in');
+          navigate('/login');
+          return;
         }
-        const response = await axios.get(`http://localhost:4000/user/${userId}`,{
-            // params: {userId},
+    
+        try {
+          const response = await axios.get(`http://localhost:4000/user/${userId}/liked-posts`, {
             headers: {
-                'Authorization': `Bearer ${authToken}`
-            }
-        })
-        console.log(response.data)
-        setData(response.data.likedPosts)
-    }
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+    
+          console.log('Liked posts:', response.data);
+          setData(response.data.likedPosts);
+        } catch (err) {
+          console.error('Error fetching liked posts:', err);
+          toast.error('Failed to fetch liked posts');
+        }
+      };
 
     useEffect(()=>{
         fetchLikedPosts()

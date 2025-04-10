@@ -95,8 +95,9 @@ server.put('/like/:postId', requireAuth, async(req: Request, res: Response)=>{
     try {
         const {postId} = req.params;
     const {userId, isLiked} = req.body;
-    const result = showInterest(postId, userId, isLiked)
+    const result = await showInterest(postId, userId, isLiked)
     console.log(`Post ID: ${postId}, User ID: ${userId}, Is Liked: ${isLiked}`);
+    console.log(result)
     return res.status(200).json(result)
     } catch (error) {
         console.log(error)
@@ -104,39 +105,48 @@ server.put('/like/:postId', requireAuth, async(req: Request, res: Response)=>{
     
 })
 
-server.get('/likes/:postId', async(req: Request, res: Response)=>{
-    try {
-        const postId = Number(req.params.postId);
-        const userId = Number(req.query.userId); // Ensure userId is treated as a string
-        const likes = await getLikes(postId, userId);
-
-        res.json({ likesCount: likes.likesCount || 0, likedByUser: likes.isLikedByUser }); // Corrected variable name
-    } catch (error) {
-        console.log(error)
-    }
-})
-
-server.get('/user/:userId', requireAuth, async (req: Request, res: Response) => {
-    const { userId } = req.params;  // Extract userId from the URL
+server.get('/user/:userId/liked-posts', requireAuth, async (req: Request, res: Response) => {
+    const { userId } = req.params;
   
-    // Validate userId
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ error: 'Invalid userId' });
-    }
+    const numericUserId = Number(userId);
   
+    
     try {
-      const likedPosts = await getUserLikedPosts(Number(userId));  // Call the helper function
+      const likedPosts = await getUserLikedPosts(numericUserId);
   
       if (likedPosts.length === 0) {
         return res.status(404).json({ message: 'No liked posts found for this user' });
       }
   
-      res.json({ likedPosts });  // Respond with the list of post IDs
+      res.status(200).json({ likedPosts }); // Respond with array of post IDs
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Something went wrong while fetching liked posts' });
+      console.error('Error fetching user liked posts:', error);
+      res.status(500).json({ error: 'Something went wrong' });
     }
-})
+  });
+  
+
+server.get('/likes/:postId', requireAuth, async (req: Request, res: Response) => {
+    const postId = Number(req.params.postId);
+    const userId = Number(req.query.userId);
+  
+    if (isNaN(postId) || isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid postId or userId' });
+    }
+  
+    try {
+      const { likesCount, isLikedByUser } = await getLikes(postId, userId);
+  
+      res.json({
+        likesCount,
+        likedByUser: isLikedByUser,
+      });
+    } catch (error) {
+      console.error('Error fetching post likes:', error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  });
+  
 
 server.get('/user/analytics/:userId', async (req: Request, res: Response)=>{
      try {

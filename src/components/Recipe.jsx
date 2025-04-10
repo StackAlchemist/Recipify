@@ -46,12 +46,11 @@ const Recipe = ({ image, name, desc, itemId }) => {
       toast.error("User not logged in!");
       return;
     }
-
+  
     try {
       const res = await axios.put(
         `http://localhost:4000/like/${itemId}`,
         {
-          isLiked: !isLiked, // Toggle the like status
           userId: userId,
         },
         {
@@ -61,15 +60,19 @@ const Recipe = ({ image, name, desc, itemId }) => {
         }
       );
 
-      setLikeNo(res.data.likes); // Update the likes count
-      setIsLiked(!isLiked); // Toggle like status
+      // const likesCount = res.data.likesCount || 0;
+const likedByUser = res.data.liked;
 
-      toast.success(isLiked ? "Unliked!" : "Liked!");
+// setLikeNo(likesCount);
+setIsLiked(likedByUser);     // Update the like count
+  
+      toast.success(likedByUser ? "Liked!" : "Unliked!");
     } catch (err) {
-      console.error("Error liking/unliking recipe:", err);
-      toast.error("Couldn't like post");
+      console.error("Error toggling like:", err);
+      toast.error("Couldn't update like");
     }
   };
+  
 
   const toggleLike = (e) => {
     e.stopPropagation();
@@ -77,8 +80,10 @@ const Recipe = ({ image, name, desc, itemId }) => {
   };
 
   useEffect(() => {
-    fetchLikes();
-  }, [itemId, userId]); // Only fetch likes when itemId or userId changes
+    if (itemId && userId) {
+      fetchLikes();
+    }
+  }, [isLiked, userId]); // Only fetch likes when itemId or userId changes
 
   return (
     <div className="p-4" onClick={handleRouting}>
