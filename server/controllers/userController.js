@@ -1,4 +1,4 @@
-const { Rewind } = require("lucide-react");
+const UserAuth = require("../model/AuthModel");
 const Recipe = require("../model/userModel");
 
 const searchRecipe = async (req, res) => {
@@ -23,7 +23,7 @@ const searchRecipe = async (req, res) => {
 
 const postRecipes = async (req, res) => {
   console.log(req.file);
-  
+  const { name } = req.user;
 
   try {
     const recipe = await Recipe.create({
@@ -32,7 +32,7 @@ const postRecipes = async (req, res) => {
       ingredients: req.body.ingredients,
        userId: req.body.userId,
       imagePath: req.file ? "/uploads/" + req.file.filename : null,
-      
+      creator: name
     });
     res.status(201).json({ message: "recipe successfully created" });
   } catch (err) {

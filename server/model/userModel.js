@@ -24,6 +24,10 @@ const RecipeSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: false
+    },
+    creator: {
+        type: String,
+        required: true
     }
 },{timestamps: true})
 

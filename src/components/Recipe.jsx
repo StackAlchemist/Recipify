@@ -6,7 +6,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const Recipe = ({ image, name, desc, itemId }) => {
+const Recipe = ({ image, name, desc, itemId, creator }) => {
   const navigate = useNavigate();
 
   const handleRouting = () => {
@@ -40,7 +40,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
       });
       const likesCount = res.data.likesCount || 0;
       const likedByUser = res.data.likedByUser;
-      console.log(res.data)
+      // console.log(res.data)
   
       
       setLikeNo(likesCount);
@@ -105,7 +105,7 @@ const Recipe = ({ image, name, desc, itemId }) => {
         {/* Recipe Image */}
         <img
           className="w-full h-80 object-cover rounded-2xl transition-transform duration-300 ease-in-out group-hover:scale-110"
-          src={`../../server${image}`}
+          src={`https://recipify-backend.onrender.com${image}`}
           alt="recipe image"
         />
 
@@ -115,29 +115,27 @@ const Recipe = ({ image, name, desc, itemId }) => {
           <div>
             <h1 className="text-2xl font-semibold">{name}</h1>
             <p className="text-sm text-gray-300">{desc}</p>
+            {creator && <p className="text-xs text-white mt-1">By: {creator}</p>}
           </div>
 
           {/* Favorite Button */}
           <div className="flex flex-col justify-center items-center">
-
-         
-          <button
-            onClick={toggleLike}
-            className="bg-white p-3 rounded-full shadow-md transition-all duration-300 
-             hover:bg-gray-200 hover:scale-110 active:scale-90">
-            {isLiked ? (
-              <FaHeart className="text-red-500 transition-all duration-300" />
-            ) : (
-              <FaRegHeart className="text-gray-500 transition-all duration-300" />
-            )}
-            
-          </button>
-          <p className="text-white">{likeNo}</p>
+            <button
+              onClick={toggleLike}
+              className="bg-white p-3 rounded-full shadow-md transition-all duration-300 
+               hover:bg-gray-200 hover:scale-110 active:scale-90">
+              {isLiked ? (
+                <FaHeart className="text-red-500 transition-all duration-300" />
+              ) : (
+                <FaRegHeart className="text-gray-500 transition-all duration-300" />
+              )}
+            </button>
+            <p className="text-white">{likeNo}</p>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Recipe;

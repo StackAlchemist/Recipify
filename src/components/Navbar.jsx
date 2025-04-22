@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ButtonFilled from "./ButtonFilled";
 import ButtonTransparent from "./ButtonTransparent";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // FIXED: Should use `react-router-dom`
-import { Dot, LogOut, Menu, User, X } from "lucide-react";
+import { Cross, Dot, LogOut, Menu, User, X } from "lucide-react";
 import axios from "axios";
 import { div } from "framer-motion/client";
 import { toast } from "react-toastify";
@@ -171,41 +171,47 @@ const Navbar = () => {
 
         </div>
 
-        <div className={`bg-gray-600 transition-all ease-in-out duration-300 transform ${isOpen ? 'max-h-96 opacity-100 py-10' : 'max-h-0 opacity-0 overflow-hidden '} `}>
-          {
-            isOpen&&(
-              <div className="flex gap-2 flex-col" onClick={()=>setIsOpen(false)}>
-              {[
-                { path: "/feed", label: "Feed" },
-                { path: "/upload", label: "Upload" },
-                { path: "/about", label: "About" },
-              ].map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`relative flex items-center flex-col px-4 py-2 rounded-md transition-all duration-500 ${
-                    isActive(item.path)
-                      ? "text-amber-300"
-                      : "text-white hover:text-amber-300 hover:bg-white/10"
-                  }`}>
-                  {item.label}
-                  <Dot
-                    className={`absolute top-5 transition-opacity duration-300 ${
-                      isActive(item.path) ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </Link>
-              ))}
-                          <button className="flex items-center justify-center text-white hover:bg-white/10  hover:text-amber-300 py-2" onClick={logout} 
-            // className="flex gap-2"
-            >
-              <p>Logout</p>
-              <LogOut color="red"/>
-            </button>
-            </div>
-            )
-          }
-        </div>
+        {isOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-300">
+    <div className="bg-gray-800 rounded-2xl shadow-2xl w-[90%] max-w-sm p-6 animate-fade-in-up">
+      <div className="justify-items-end mb-3" onClick={() => setIsOpen(false)}><X color={'white'}/></div>
+      <div className="flex gap-3 flex-col" onClick={() => setIsOpen(false)}>
+        {[
+          { path: "/feed", label: "Feed" },
+          { path: "/upload", label: "Upload" },
+          { path: "/liked-post", label: "Faves" },
+          { path: "/analytics", label: "Analytics" },
+        ].map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`relative text-center px-4 py-3 rounded-lg font-medium text-lg transition-all duration-300 ${
+              isActive(item.path)
+                ? "text-amber-300 bg-white/10"
+                : "text-white hover:text-amber-300 hover:bg-white/10"
+            }`}
+          >
+            {item.label}
+            <Dot
+              className={`absolute right-4 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${
+                isActive(item.path) ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </Link>
+        ))}
+
+        <button
+          className="flex items-center justify-center gap-2 text-white hover:bg-white/10 hover:text-amber-300 py-3 rounded-lg mt-2"
+          onClick={logout}
+        >
+          <p>Logout</p>
+          <LogOut color="red" />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </>
   );

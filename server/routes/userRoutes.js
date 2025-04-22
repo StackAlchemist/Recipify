@@ -17,7 +17,7 @@ const upload = multer( {storage: storage} )
 const route = express.Router()
 
 route.get('/search', searchRecipe)
-route.post('/upload',upload.single('image'), postRecipes)
+route.post('/upload', requireAuth, upload.single('image'), postRecipes)
 route.get('/getFeed', getFeed)
 route.get('/getIndFood/:id', get_details)
 route.put('/like/:id', likePost)
