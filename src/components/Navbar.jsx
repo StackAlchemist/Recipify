@@ -159,7 +159,9 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex gap-2">
-
+                            <Link to="/login">
+                <ButtonTransparent content={"Login"} />
+              </Link>
             </div>
           )}
                     <button onClick={()=>setIsOpen(!isOpen)}>
